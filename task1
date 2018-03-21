@@ -7,8 +7,6 @@
 
 <body>
 
-<button onclick="loadDataUsers()" id="button">Загрузити дані</button>
-
 <style>
     .alert {
         padding: 5px;
@@ -26,19 +24,7 @@
     loadDataUsers();
 
     function loadDataUsers() {
-
         const URL = 'https://jsonplaceholder.typicode.com/posts/';
-
-        function status(response) {
-            if (response.status >= 200 && response.status < 300) {
-                return Promise.resolve(response)
-            } else {
-                return Promise.reject(new Error(response.statusText))
-            }
-        }
-
-        button.parentNode.removeChild(button);
-
 
         fetch(URL)
             .then(status)
@@ -49,23 +35,6 @@
                 li.innerHTML = error;
             });
 
-        button.innerHTML = 'Загружаю...';
-        button.disabled = true;
-
-    }
-
-    function lol(x) {
-
-        const k = 'https://jsonplaceholder.typicode.com/posts?userId=' + x;
-        fetch(k)
-            .then(status)
-            .then(response => response.json())
-            .then(user => buldShow(user))
-            .catch(error => {
-                let li = list.appendChild(document.createElement('li'));
-                li.innerHTML = error;
-            });
-
         function status(response) {
             if (response.status >= 200 && response.status < 300) {
                 return Promise.resolve(response)
@@ -75,36 +44,53 @@
         }
     }
 
+    function showDataUsers(users) {
 
-    function buldShow(users) {
         users.forEach(user => {
             let li = list.appendChild(document.createElement('li'));
             li.className = "alert alert-success";
+            li.innerHTML = ` <center> <h3> <a href="#" onclick=authorFetchData(${user.userId}) >
+                Автор :  ${user.userId}</h3></a> ` + "<p> Ід статті : " + `${user.id}</p> ` +
+                "Заголовок :" + `<i>${user.title}</i> </center>`;
+
+
+        });
+    }
+
+    function authorFetchData(x) {
+
+                const k = 'https://jsonplaceholder.typicode.com/posts?userId=' + x;
+
+        function status(response) {
+            if (response.status >= 200 && response.status < 300) {
+                return Promise.resolve(response)
+            } else {
+                return Promise.reject(new Error(response.statusText))
+            }
+        }
+
+        fetch(k)
+            .then(status)
+            .then(response => response.json())
+            .then(user => authorShow(user))
+            .catch(error => {
+                let li = list.appendChild(document.createElement('li'));
+                li.innerHTML = error;
+            });
+
+    }
+
+
+    function authorShow(users) {
+        users.forEach(user => {
+            let li = list.appendChild(document.createElement('li'));
             li.className = "alert alert-success";
             li.innerHTML = "<h3> Автор : " + user.userId + "</h3>" +
                 "<p>Ід статті : " + user.id + "</p> " + "<i>Заголовок :" + user.title + "<i>";
         });
     }
 
-    function showDataUsers(users) {
 
-        users.forEach(user => {
-
-            let li = list.appendChild(document.createElement('li'));
-            li.className = "alert alert-success";
-
-            li.innerHTML = ` <center> <h3> <a class='lanka' href="#" onclick=lol(${user.userId}) >   Автор :  ${user.userId}</h3></a> ` +
-                "<p> Ід статті : " + `${user.id}</p> ` +
-                "Заголовок :" + `<i>${user.title}</i>
-                </center>`;
-
-//            setTimeout(function() {
-//                li.parentNode.removeChild(li);
-//            }, 1000);
-
-        });
-
-    }
 </script>
 
 </body>
