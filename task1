@@ -1,0 +1,112 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+</head>
+
+<body>
+
+<button onclick="loadDataUsers()" id="button">Загрузити дані</button>
+
+<style>
+    .alert {
+        padding: 5px;
+        border: 1px solid #d6e9c6;
+        border-radius: 0px;
+        color: #3c763d;
+        background-color: #dff0d8;
+    }
+</style>
+
+<strong id="list"> </strong>
+
+<script>
+
+    loadDataUsers();
+
+    function loadDataUsers() {
+
+        const URL = 'https://jsonplaceholder.typicode.com/posts/';
+
+        function status(response) {
+            if (response.status >= 200 && response.status < 300) {
+                return Promise.resolve(response)
+            } else {
+                return Promise.reject(new Error(response.statusText))
+            }
+        }
+
+        button.parentNode.removeChild(button);
+
+
+        fetch(URL)
+            .then(status)
+            .then(response => response.json())
+            .then(user => showDataUsers(user))
+            .catch(error => {
+                let li = list.appendChild(document.createElement('li'));
+                li.innerHTML = error;
+            });
+
+        button.innerHTML = 'Загружаю...';
+        button.disabled = true;
+
+    }
+
+    function lol(x) {
+
+        const k = 'https://jsonplaceholder.typicode.com/posts?userId=' + x;
+        fetch(k)
+            .then(status)
+            .then(response => response.json())
+            .then(user => buldShow(user))
+            .catch(error => {
+                let li = list.appendChild(document.createElement('li'));
+                li.innerHTML = error;
+            });
+
+        function status(response) {
+            if (response.status >= 200 && response.status < 300) {
+                return Promise.resolve(response)
+            } else {
+                return Promise.reject(new Error(response.statusText))
+            }
+        }
+    }
+
+
+    function buldShow(users) {
+        users.forEach(user => {
+            let li = list.appendChild(document.createElement('li'));
+            li.className = "alert alert-success";
+            li.className = "alert alert-success";
+            li.innerHTML = "<h3> Автор : " + user.userId + "</h3>" +
+                "<p>Ід статті : " + user.id + "</p> " + "<i>Заголовок :" + user.title + "<i>";
+        });
+    }
+
+    function showDataUsers(users) {
+
+        users.forEach(user => {
+
+            let li = list.appendChild(document.createElement('li'));
+            li.className = "alert alert-success";
+
+            li.innerHTML = ` <center> <h3> <a class='lanka' href="#" onclick=lol(${user.userId}) >   Автор :  ${user.userId}</h3></a> ` +
+                "<p> Ід статті : " + `${user.id}</p> ` +
+                "Заголовок :" + `<i>${user.title}</i>
+                </center>`;
+
+//            setTimeout(function() {
+//                li.parentNode.removeChild(li);
+//            }, 1000);
+
+        });
+
+    }
+</script>
+
+</body>
+
+</html>
